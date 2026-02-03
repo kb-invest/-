@@ -20,17 +20,8 @@ const PromptGuide = () => {
 
   const fetchPrompts = async () => {
     try {
-      // 동적으로 백엔드 URL 설정
-      const getBackendUrl = () => {
-        if (window.location.hostname === 'localhost') {
-          return 'http://localhost:5000'
-        }
-        const hostname = window.location.hostname.replace('3000-', '5000-')
-        return `https://${hostname}`
-      }
-      
-      const API_BASE_URL = getBackendUrl()
-      const response = await axios.get(`${API_BASE_URL}/api/genspark-prompts`)
+      const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+      const response = await axios.get(`${API_BASE_URL}/genspark-prompts`)
       setPrompts(response.data.prompts)
     } catch (error) {
       console.error('프롬프트 가져오기 실패:', error)
