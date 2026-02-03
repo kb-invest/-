@@ -80,15 +80,39 @@ const PropertyForm = () => {
       })
 
       if (response.data.success) {
+        const buildingInfo = response.data.building_info
+        const landInfo = response.data.land_info
+        
         setFormData(prev => ({
           ...prev,
-          building_info: response.data.building_info,
-          land_info: response.data.land_info
+          building_info: buildingInfo,
+          land_info: landInfo
         }))
-        setMessage('✅ 건축물/토지 정보를 성공적으로 가져왔습니다!')
+        
+        // 상태 메시지 처리
+        if (buildingInfo.status === 'success' || landInfo.status === 'success') {
+          setMessage('✅ 건축물/토지 정보를 성공적으로 가져왔습니다!')
+        } else if (buildingInfo.status === 'warning' || landInfo.status === 'warning') {
+          setMessage(`⚠️ ${buildingInfo.message || landInfo.message || '일부 정보를 가져오지 못했습니다.'}`)
+        } else if (buildingInfo.status === 'error' || landInfo.status === 'error') {
+          setMessage(`❌ ${buildingInfo.message || landInfo.message || '데이터 조회 실패'}`)
+        } else {
+          setMessage('✅ 요청 완료')
+        }
       }
     } catch (error: any) {
-      setMessage(`❌ 데이터 조회 실패: ${error.response?.data?.error || error.message}`)
+      console.error('API Error:', error)
+      if (error.response) {
+        // 서버가 응답했지만 에러 상태 코드
+        const errorMsg = error.response.data?.error || error.response.data?.message || '알 수 없는 오류'
+        setMessage(`❌ 서버 오류: ${errorMsg}`)
+      } else if (error.request) {
+        // 요청은 보냈지만 응답을 받지 못함
+        setMessage('❌ 서버 연결 실패: 백엔드 서버가 실행 중인지 확인해주세요.')
+      } else {
+        // 요청 설정 중 에러 발생
+        setMessage(`❌ 오류 발생: ${error.message}`)
+      }
     } finally {
       setFetchingData(false)
     }
