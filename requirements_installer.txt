@@ -1,0 +1,8 @@
+"""
+EXE 빌드 스크립트
+PyInstaller로 installer.py를 EXE로 변환
+"""
+
+# requirements_installer.txt
+pyinstaller
+pywin32
