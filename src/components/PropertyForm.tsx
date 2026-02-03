@@ -43,17 +43,8 @@ const PropertyForm = () => {
   const [fetchingData, setFetchingData] = useState(false)
   const [message, setMessage] = useState('')
 
-  // 동적으로 백엔드 URL 설정
-  const getBackendUrl = () => {
-    if (window.location.hostname === 'localhost') {
-      return 'http://localhost:5000'
-    }
-    // sandbox 환경에서는 포트 5000으로 변경
-    const hostname = window.location.hostname.replace('3000-', '5000-')
-    return `https://${hostname}`
-  }
-  
-  const API_BASE_URL = getBackendUrl()
+  // API 베이스 URL - 환경 변수 또는 상대 경로 사용
+  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -75,7 +66,7 @@ const PropertyForm = () => {
     setMessage('🔍 공공데이터포털에서 정보를 가져오는 중...')
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/fetch-property-data`, {
+      const response = await axios.post(`${API_BASE_URL}/fetch-property-data`, {
         address: formData.address,
         api_key: formData.api_key
       })
@@ -101,7 +92,7 @@ const PropertyForm = () => {
     formDataImg.append('type', type)
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/upload-image`, formDataImg, {
+      const response = await axios.post(`${API_BASE_URL}/upload-image`, formDataImg, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
@@ -126,7 +117,7 @@ const PropertyForm = () => {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/generate-pptx`,
+        `${API_BASE_URL}/generate-pptx`,
         {
           template_type: templateType,
           property_data: formData
