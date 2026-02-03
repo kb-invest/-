@@ -20,7 +20,7 @@ const PromptGuide = () => {
 
   const fetchPrompts = async () => {
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+      const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '/api'
       const response = await axios.get(`${API_BASE_URL}/genspark-prompts`)
       setPrompts(response.data.prompts)
     } catch (error) {

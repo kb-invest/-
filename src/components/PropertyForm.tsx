@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Upload, Download, Tv, Printer, MapPin, DollarSign, Image as ImageIcon, Building, Loader2 } from 'lucide-react'
+import { Search, Tv, Printer, MapPin, DollarSign, Image as ImageIcon, Building, Loader2 } from 'lucide-react'
 import axios from 'axios'
 
 interface PropertyData {
@@ -47,7 +47,7 @@ const PropertyForm = () => {
   const [message, setMessage] = useState('')
 
   // API 베이스 URL - 환경 변수 또는 상대 경로 사용
-  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+  const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '/api'
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
