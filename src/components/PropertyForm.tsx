@@ -43,7 +43,17 @@ const PropertyForm = () => {
   const [fetchingData, setFetchingData] = useState(false)
   const [message, setMessage] = useState('')
 
-  const API_BASE_URL = 'http://localhost:5000'
+  // 동적으로 백엔드 URL 설정
+  const getBackendUrl = () => {
+    if (window.location.hostname === 'localhost') {
+      return 'http://localhost:5000'
+    }
+    // sandbox 환경에서는 포트 5000으로 변경
+    const hostname = window.location.hostname.replace('3000-', '5000-')
+    return `https://${hostname}`
+  }
+  
+  const API_BASE_URL = getBackendUrl()
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
