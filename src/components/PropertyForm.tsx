@@ -21,6 +21,9 @@ interface PropertyData {
 }
 
 const PropertyForm = () => {
+  // localStorage에서 저장된 API 키 불러오기
+  const savedApiKey = localStorage.getItem('realestate_api_key') || ''
+  
   const [formData, setFormData] = useState<PropertyData>({
     address: '',
     project_name: '',
@@ -30,7 +33,7 @@ const PropertyForm = () => {
     rental_details: '',
     key_features: ['', '', ''],
     location_description: '',
-    api_key: '',
+    api_key: savedApiKey,
     building_info: {},
     land_info: {},
     main_image: '',
@@ -48,6 +51,11 @@ const PropertyForm = () => {
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    
+    // API 키가 변경되면 localStorage에 저장
+    if (field === 'api_key' && value) {
+      localStorage.setItem('realestate_api_key', value)
+    }
   }
 
   const handleFeatureChange = (index: number, value: string) => {
